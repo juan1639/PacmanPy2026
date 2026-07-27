@@ -93,11 +93,11 @@ def instanciar_fantasmas(self):
         datos = self.CO.LISTA_ARGS_FANTASMAS[i]
         coorX = datos[0]
         coorY = datos[1]
-        instanciar_fantasma(self, coorX, coorY, i, datos[3], False, False)
+        instanciar_fantasma(self, coorX, coorY, i, datos[3], False, False, datos[4], datos[5])
 
 # ===================================================================================
-def instanciar_fantasma(self, coorX, coorY, i, direc, azul, ojos):
-    fantasma = Fantasma(self, coorX, coorY, i, direc, azul, ojos)
+def instanciar_fantasma(self, coorX, coorY, i, direc, azul, ojos, scatterX, scatterY):
+    fantasma = Fantasma(self, coorX, coorY, i, direc, azul, ojos, scatterX, scatterY)
     self.listas_sprites["fantasmas"].add(fantasma)
 
 # ===================================================================================

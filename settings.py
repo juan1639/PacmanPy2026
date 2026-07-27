@@ -77,9 +77,12 @@ class Constantes:
     RESOLUCION = (TX * COLUMNAS + ZONA_SCORES, TY * FILAS)
     FPS = CONFIG.getint('video', 'fps')
 
+    # (x, y, id, direccion, scatterX, scatterY):
     LISTA_ARGS_FANTASMAS = [
-        (5, 8, 0, 'le'), (8, 8, 1, 'le'),
-        (10, 8, 2, 'ri'), (13, 8, 3, 'ri')
+        (5, 8, 0, 'le', 1, 1),
+        (8, 8, 1, 'le', 17, 1),
+        (10, 8, 2, 'ri', 1, 13),
+        (13, 8, 3, 'ri', 17, 13)
     ]
 
 # ====================================================================================

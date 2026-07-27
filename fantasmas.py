@@ -15,8 +15,14 @@ class Direccion(Enum):
     DOWN = "do"
     RIGHT = "ri"
 
+class EstadoFantasmas(Enum):
+    CHASE = "chase"
+    SCATTER = "scatter"
+    AZULES = "azules"
+    OJOS = "ojos"
+
 class Fantasma(pygame.sprite.Sprite):
-    def __init__(self, game, x, y, id_fantasma, dir_defecto, azul=False, ojos=False):
+    def __init__(self, game, x, y, id_fantasma, dir_defecto, azul=False, ojos=False, scatterX=1, scatterY=1):
         super().__init__()
         self.game = game
         self.id_fantasma = id_fantasma
@@ -24,7 +30,9 @@ class Fantasma(pygame.sprite.Sprite):
         self.azul = azul
         self.ojos = ojos
         self.velocidad = 2
-        self.DISTANCIA_EXAGERADA = 9900
+        self.scatter_x = scatterX
+        self.scatter_y = scatterY
+        self.estado_fantasmas = EstadoFantasmas.SCATTER
 
         # dict_movimientos:
         self.DICT_MOVIMIENTOS = {
@@ -116,6 +124,7 @@ class Fantasma(pygame.sprite.Sprite):
                 self.game.obtener_grafico(f"fantasma{i + 1}.png", 1)[0]
                 for i in range(38) if i not in [8, 9, 18, 19, 28, 29]
             ]
+    
     # ---------------------------------------------------------
     def mover_fantasmas(self):
         """Movimiento de los fantasmas."""
@@ -184,7 +193,62 @@ class Fantasma(pygame.sprite.Sprite):
     # ----------------------------------------------------------
     def obtener_objetivo(self):
         """Devuelve las coord x,y de Pacman"""
-        return (self.game.pacman.rect.x // self.game.CO.TX, self.game.pacman.rect.y // self.game.CO.TY)
+        return self.obtener_objetivo_seleccionando_current_fantasma()
+    
+    # ----------------------------------------------------------
+    def obtener_objetivo_seleccionando_current_fantasma(self):
+        """El objetivo es diferente dependiendo del fantasma (cada fantasma IA diferente)"""
+
+        if self.id_fantasma == 0:
+            return self.objetivo_blinky()
+        elif self.id_fantasma == 1:
+            return self.objetivo_pinky()
+        elif self.id_fantasma == 2:
+            return self.objetivo_inky()
+        else:
+            return self.objetivo_clyde()
+
+    # ----------------------------------------------------------
+    def objetivo_blinky(self):
+        """- Blinky - persigue DIRECTAMENTE a Pacman"""
+
+        if self.estado_fantasmas == EstadoFantasmas.CHASE:
+            return (self.game.pacman.rect.x // self.game.CO.TX, self.game.pacman.rect.y // self.game.CO.TY)
+        
+        elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
+            return (self.scatter_x, self.scatter_y)
+
+    # ----------------------------------------------------------
+    def objetivo_pinky(self):
+        """- Pinky - tiene como objetivo 4 casillas de antelacion a Pacman"""
+
+        if self.estado_fantasmas == EstadoFantasmas.CHASE:
+            CASILLAS_ANTELACION = 4
+            objetivo_x = self.game.pacman.rect.x + (self.game.pacman.movimientos[self.game.pacman.direccion_confirmada][0] * CASILLAS_ANTELACION)
+            objetivo_y = self.game.pacman.rect.y + (self.game.pacman.movimientos[self.game.pacman.direccion_confirmada][1] * CASILLAS_ANTELACION)
+            return (objetivo_x // self.game.CO.TX, objetivo_y // self.game.CO.TY)
+
+        elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
+            return (self.scatter_x, self.scatter_y)
+
+    # ----------------------------------------------------------
+    def objetivo_inky(self):
+        """ - Inky - tiene como objetivo un VECTOR entre Pacman y Blinky"""
+
+        if self.estado_fantasmas == EstadoFantasmas.CHASE:
+            return (self.game.pacman.rect.x // self.game.CO.TX, self.game.pacman.rect.y // self.game.CO.TY)
+
+        elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
+            return (self.scatter_x, self.scatter_y)
+
+    # ----------------------------------------------------------
+    def objetivo_clyde(self):
+
+        if self.estado_fantasmas == EstadoFantasmas.CHASE:
+            return (self.game.pacman.rect.x // self.game.CO.TX, self.game.pacman.rect.y // self.game.CO.TY)
+
+        elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
+            return (self.scatter_x, self.scatter_y)
     
     # ----------------------------------------------------------
     def actualizar_animacion(self):

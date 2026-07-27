@@ -79,9 +79,12 @@ class PacMan(pygame.sprite.Sprite):
     
     # --------------------------------------------------------------
     def manejar_colisiones(self):
-        # Solo comprobamos si estamos en el centro exacto del tile
+        """Hacemos los checkeos necesarios cuando estemos en el centro de un tile"""
+
         if self.rect.x % self.TX == 0 and self.rect.y % self.TY == 0:
+            # Solo comprobamos si estamos en el centro exacto del tile
             x, y = self.rect.x // self.TX, self.rect.y // self.TY
+            
             colision_direccion = self.colision_laberinto(self.direccion_actual, x, y)
             colision_velocidad = self.colision_laberinto(self.direccion_confirmada, x, y)
 
@@ -93,6 +96,7 @@ class PacMan(pygame.sprite.Sprite):
             else:
                 self.avanzar = False
 
+        # Y una vez checkeado todo... procedemos a mover a Pacman:
         if self.avanzar:
             vel_x, vel_y = self.movimientos[self.direccion_confirmada][:2]
             self.rect.x += vel_x * self.velocidad
