@@ -41,4 +41,16 @@ def colision_laberinto(self, x, y):
     
     return Pantallas.get_laberinto(self.game.nivel)[indice] in paredes
 
+# ----------------------------------------------------------
+def perseguir_pacman(self):
+    """Actualizar dirección para perseguir a PacMan."""
+
+    if random.randrange(100) > self.game.nivel * 30:
+        return
+    if random.randrange(10) < 5:  # Decisión horizontal/vertical
+        self.direccion = Direccion.UP.value if self.game.pacman.rect.y < self.rect.y else Direccion.DOWN.value
+    else:
+        self.direccion = Direccion.LEFT.value if self.game.pacman.rect.x < self.rect.x else Direccion.RIGHT.value
+    
+    self.vel_xy = self.dic_direccion[self.direccion][:2]
 

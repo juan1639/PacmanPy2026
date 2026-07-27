@@ -10,10 +10,10 @@ from tiles import TileType, paredes
 #
 # ------------------------------------------------------------------------------------
 class Direccion(Enum):
-    RIGHT = "ri"
-    LEFT = "le"
     UP = "up"
+    LEFT = "le"
     DOWN = "do"
+    RIGHT = "ri"
 
 class Fantasma(pygame.sprite.Sprite):
     def __init__(self, game, x, y, id_fantasma, dir_defecto, azul=False, ojos=False):
@@ -25,6 +25,24 @@ class Fantasma(pygame.sprite.Sprite):
         self.ojos = ojos
         self.velocidad = 2
         self.DISTANCIA_EXAGERADA = 9900
+
+        # dict_movimientos:
+        self.DICT_MOVIMIENTOS = {
+            "up": (0, -1),
+            "le": (-1, 0),
+            "do": (0, 1),
+            "ri": (1, 0)
+        }
+
+        self.DICT_OPUESTA = {
+            "up": "do",
+            "do": "up",
+            "le": "ri",
+            "ri": "le"
+        }
+
+        # Orden de prioridad EXACTO del arcade
+        self.PRIORIDAD = ["up", "le", "do", "ri"]
 
         # Diccionario de direcciones
         self.dic_direccion = self.generar_direcciones()
@@ -74,10 +92,10 @@ class Fantasma(pygame.sprite.Sprite):
         multiplicar = 0 if self.azul or self.ojos else 2
 
         return {
-            Direccion.RIGHT.value: [1, 0, anim_base[0] + self.id_fantasma * multiplicar, "updole", "ri", "le"],
-            Direccion.LEFT.value: [-1, 0, anim_base[1] + self.id_fantasma * multiplicar, "updori", "le", "ri"],
             Direccion.UP.value: [0, -1, anim_base[2] + self.id_fantasma * multiplicar, "riledo", "up", "do"],
-            Direccion.DOWN.value: [0, 1, anim_base[3] + self.id_fantasma * multiplicar, "rileup", "do", "up"]
+            Direccion.LEFT.value: [-1, 0, anim_base[1] + self.id_fantasma * multiplicar, "updori", "le", "ri"],
+            Direccion.DOWN.value: [0, 1, anim_base[3] + self.id_fantasma * multiplicar, "rileup", "do", "up"],
+            Direccion.RIGHT.value: [1, 0, anim_base[0] + self.id_fantasma * multiplicar, "updole", "ri", "le"]
         }
     
     # ----------------------------------------------------------
@@ -99,66 +117,68 @@ class Fantasma(pygame.sprite.Sprite):
                 for i in range(38) if i not in [8, 9, 18, 19, 28, 29]
             ]
 
-    # ----------------------------------------------------------
     def manejar_colisiones(self):
         """Verificar y manejar colisiones del fantasma."""
 
         if self.rect.x % self.game.CO.TX == 0 and self.rect.y % self.game.CO.TY == 0:
-            x, y = self.rect.x // self.game.CO.TX, self.rect.y // self.game.CO.TY
 
-            lista_dir_posibles = self.obtener_direcciones_posibles(x, y)
+            tile_x = self.rect.x // self.game.CO.TX
+            tile_y = self.rect.y // self.game.CO.TY
 
-            lista_distancias = []
+            self.elegir_direccion(tile_x, tile_y)
 
-            for posible in lista_dir_posibles:
-                if posible:
-                    calc_distancia = pow(abs(self.rect.x - self.game.pacman.rect.x), 2) + pow(abs(self.rect.y - self.game.pacman.rect.y), 2)
-                    lista_distancias.append(calc_distancia)
-                else:
-                    lista_distancias.append(self.DISTANCIA_EXAGERADA)
-
-            menor_distancia = min(lista_distancias)
-            flag_elegir = False
-
-            for idx in range(len(lista_distancias)):
-                if lista_distancias[idx] == menor_distancia and not flag_elegir:
-                    flag_elegir = True
-                    if idx == 0:
-                        self.direccion = "ri"
-                    elif idx == 1:
-                        self.direccion = "le"
-                    elif idx == 2:
-                        self.direccion = "up"
-                    else:
-                        self.direccion = "do"
-            
-            """if not self.colision_laberinto(x, y):
-                self.vel_xy = self.dic_direccion[self.direccion][:2]
-            else:
-                self.elegir_direccion_alternativa()
-                return"""
-
+        # obtener los offset y mover pacman:
         self.vel_xy = self.dic_direccion[self.direccion][:2]
+
         self.rect.x += self.vel_xy[0] * self.velocidad
         self.rect.y += self.vel_xy[1] * self.velocidad
     
     # ----------------------------------------------------------
-    def obtener_direcciones_posibles(self, x, y):
-        lista_direcciones = []
+    def elegir_direccion(self, x, y):
+        """Elegir una direccion (IA fantasmas)"""
 
-        for direcciones in self.dic_direccion.values():
-            if self.colision_laberinto_dir_validas(x, y, direcciones[0], direcciones[1]):
-                lista_direcciones.append(False)
-            else:
-                if direcciones[5] == self.direccion:
-                    lista_direcciones.append(False)
-                else:
-                    lista_direcciones.append(True)
+        mejor_dir = None
+        mejor_dist = float("inf")
 
-        return lista_direcciones
+        for direccion in self.PRIORIDAD:
+            # No permitir media vuelta
+            if direccion == self.DICT_OPUESTA[self.direccion]:
+                continue
+
+            # Hay pared
+            if not self.direccion_valida(x, y, direccion):
+                continue
+
+            dx, dy = self.DICT_MOVIMIENTOS[direccion]
+
+            nuevo_x = x + dx
+            nuevo_y = y + dy
+
+            distancia = (nuevo_x - x) ** 2 + (nuevo_y - y) ** 2
+
+            if distancia < mejor_dist:
+                mejor_dist = distancia
+                mejor_dir = direccion
+
+        # Callejón sin salida
+        if mejor_dir is None:
+            mejor_dir = self.DICT_OPUESTA[self.direccion]
+
+        self.direccion = mejor_dir
     
     # ----------------------------------------------------------
-    def colision_laberinto_dir_validas(self, x, y, offset_x, offset_y):
+    def direccion_valida(self, x, y, direccion):
+        dx, dy = self.DICT_MOVIMIENTOS[direccion]
+
+        indice = self.game.obtener_indice(x + dx, y + dy)
+
+        if indice is None:
+            return True
+
+        return Pantallas.get_laberinto(self.game.nivel)[indice] not in paredes
+    
+    # ----------------------------------------------------------
+    """def colision_laberinto_dir_validas(self, x, y, offset_x, offset_y):
         if self.es_teletransporte(x, y, offset_x):
             return True
         
@@ -167,10 +187,10 @@ class Fantasma(pygame.sprite.Sprite):
         if indice is None:
             return False
 
-        return Pantallas.get_laberinto(self.game.nivel)[indice] in paredes
+        return Pantallas.get_laberinto(self.game.nivel)[indice] in paredes"""
     
     # ----------------------------------------------------------
-    def es_teletransporte(self, x, y, vel_x):
+    """def es_teletransporte(self, x, y, vel_x):
         if y == 11:  # Línea especial para teletransporte
             if x + vel_x > self.game.CO.COLUMNAS:
                 self.rect.x = -self.game.CO.TX
@@ -178,20 +198,7 @@ class Fantasma(pygame.sprite.Sprite):
             elif x + vel_x < -1:
                 self.rect.x = self.game.CO.COLUMNAS * self.game.CO.TX
                 return True
-        return False
-    
-    # ----------------------------------------------------------
-    def perseguir_pacman(self):
-        """Actualizar dirección para perseguir a PacMan."""
-
-        if random.randrange(100) > self.game.nivel * 30:
-            return
-        if random.randrange(10) < 5:  # Decisión horizontal/vertical
-            self.direccion = Direccion.UP.value if self.game.pacman.rect.y < self.rect.y else Direccion.DOWN.value
-        else:
-            self.direccion = Direccion.LEFT.value if self.game.pacman.rect.x < self.rect.x else Direccion.RIGHT.value
-        
-        self.vel_xy = self.dic_direccion[self.direccion][:2]
+        return False"""
     
     # ----------------------------------------------------------
     def actualizar_animacion(self):
