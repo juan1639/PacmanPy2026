@@ -54,3 +54,28 @@ def perseguir_pacman(self):
     
     self.vel_xy = self.dic_direccion[self.direccion][:2]
 
+# ----------------------------------------------------------
+"""def colision_laberinto_dir_validas(self, x, y, offset_x, offset_y):
+    if self.es_teletransporte(x, y, offset_x):
+        return True
+    
+    indice = self.game.obtener_indice(x + offset_x, y + offset_y)
+            
+    if indice is None:
+        return False
+
+    return Pantallas.get_laberinto(self.game.nivel)[indice] in paredes"""
+
+# ----------------------------------------------------------
+"""def es_teletransporte(self, x, y, vel_x):
+    if y == 11:  # Línea especial para teletransporte
+        if x + vel_x > self.game.CO.COLUMNAS:
+            self.rect.x = -self.game.CO.TX
+            return True
+        elif x + vel_x < -1:
+            self.rect.x = self.game.CO.COLUMNAS * self.game.CO.TX
+            return True
+    return False"""
+
+
+

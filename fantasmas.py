@@ -78,7 +78,7 @@ class Fantasma(pygame.sprite.Sprite):
             return
         
         self.actualizar_animacion()
-        self.manejar_colisiones()
+        self.mover_fantasmas()
         self.verificar_colision_pacman()
     
     # ----------------------------------------------------------
@@ -116,9 +116,9 @@ class Fantasma(pygame.sprite.Sprite):
                 self.game.obtener_grafico(f"fantasma{i + 1}.png", 1)[0]
                 for i in range(38) if i not in [8, 9, 18, 19, 28, 29]
             ]
-
-    def manejar_colisiones(self):
-        """Verificar y manejar colisiones del fantasma."""
+    # ---------------------------------------------------------
+    def mover_fantasmas(self):
+        """Movimiento de los fantasmas."""
 
         if self.rect.x % self.game.CO.TX == 0 and self.rect.y % self.game.CO.TY == 0:
 
@@ -154,7 +154,9 @@ class Fantasma(pygame.sprite.Sprite):
             nuevo_x = x + dx
             nuevo_y = y + dy
 
-            distancia = (nuevo_x - x) ** 2 + (nuevo_y - y) ** 2
+            objetivo_x, objetivo_y = self.obtener_objetivo()
+
+            distancia = (nuevo_x - objetivo_x) ** 2 + (nuevo_y - objetivo_y) ** 2
 
             if distancia < mejor_dist:
                 mejor_dist = distancia
@@ -168,6 +170,8 @@ class Fantasma(pygame.sprite.Sprite):
     
     # ----------------------------------------------------------
     def direccion_valida(self, x, y, direccion):
+        """Verificar si una direccion es valida (que no haya pared)"""
+
         dx, dy = self.DICT_MOVIMIENTOS[direccion]
 
         indice = self.game.obtener_indice(x + dx, y + dy)
@@ -178,27 +182,9 @@ class Fantasma(pygame.sprite.Sprite):
         return Pantallas.get_laberinto(self.game.nivel)[indice] not in paredes
     
     # ----------------------------------------------------------
-    """def colision_laberinto_dir_validas(self, x, y, offset_x, offset_y):
-        if self.es_teletransporte(x, y, offset_x):
-            return True
-        
-        indice = self.game.obtener_indice(x + offset_x, y + offset_y)
-                
-        if indice is None:
-            return False
-
-        return Pantallas.get_laberinto(self.game.nivel)[indice] in paredes"""
-    
-    # ----------------------------------------------------------
-    """def es_teletransporte(self, x, y, vel_x):
-        if y == 11:  # Línea especial para teletransporte
-            if x + vel_x > self.game.CO.COLUMNAS:
-                self.rect.x = -self.game.CO.TX
-                return True
-            elif x + vel_x < -1:
-                self.rect.x = self.game.CO.COLUMNAS * self.game.CO.TX
-                return True
-        return False"""
+    def obtener_objetivo(self):
+        """Devuelve las coord x,y de Pacman"""
+        return (self.game.pacman.rect.x // self.game.CO.TX, self.game.pacman.rect.y // self.game.CO.TY)
     
     # ----------------------------------------------------------
     def actualizar_animacion(self):
@@ -233,6 +219,7 @@ class Fantasma(pygame.sprite.Sprite):
     # ----------------------------------------------------------
     def manejar_colision_comido(self):
         """Manejar cuando PacMan come al fantasma azul."""
+
         self.game.sonidos.reproducir("eating_ghost")
         self.kill()
 
