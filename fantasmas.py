@@ -1,5 +1,4 @@
 import pygame
-import random
 from enum import Enum
 from laberintos import Pantallas
 from tiles import TileType, paredes
@@ -32,7 +31,7 @@ class Fantasma(pygame.sprite.Sprite):
         self.velocidad = 2
         self.scatter_x = scatterX
         self.scatter_y = scatterY
-        self.estado_fantasmas = EstadoFantasmas.SCATTER
+        self.estado_fantasmas = EstadoFantasmas.CHASE
 
         # dict_movimientos:
         self.DICT_MOVIMIENTOS = {
@@ -223,10 +222,17 @@ class Fantasma(pygame.sprite.Sprite):
         """- Pinky - tiene como objetivo 4 casillas de antelacion a Pacman"""
 
         if self.estado_fantasmas == EstadoFantasmas.CHASE:
+            pac_x = self.game.pacman.rect.x // self.game.CO.TX
+            pac_y = self.game.pacman.rect.y // self.game.CO.TY
+
+            dx, dy = self.game.pacman.movimientos[self.game.pacman.direccion_confirmada][:2]
+
             CASILLAS_ANTELACION = 4
-            objetivo_x = self.game.pacman.rect.x + (self.game.pacman.movimientos[self.game.pacman.direccion_confirmada][0] * CASILLAS_ANTELACION)
-            objetivo_y = self.game.pacman.rect.y + (self.game.pacman.movimientos[self.game.pacman.direccion_confirmada][1] * CASILLAS_ANTELACION)
-            return (objetivo_x // self.game.CO.TX, objetivo_y // self.game.CO.TY)
+
+            objetivo_x = pac_x + dx * CASILLAS_ANTELACION
+            objetivo_y = pac_y + dy * CASILLAS_ANTELACION
+
+            return objetivo_x, objetivo_y
 
         elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
             return (self.scatter_x, self.scatter_y)
@@ -236,7 +242,30 @@ class Fantasma(pygame.sprite.Sprite):
         """ - Inky - tiene como objetivo un VECTOR entre Pacman y Blinky"""
 
         if self.estado_fantasmas == EstadoFantasmas.CHASE:
-            return (self.game.pacman.rect.x // self.game.CO.TX, self.game.pacman.rect.y // self.game.CO.TY)
+            pac_x = self.game.pacman.rect.x // self.game.CO.TX
+            pac_y = self.game.pacman.rect.y // self.game.CO.TY
+
+            dx, dy = self.game.pacman.movimientos[self.game.pacman.direccion_confirmada][:2]
+
+            # Dos casillas delante de Pac-Man
+            punto_x = pac_x + dx * 2
+            punto_y = pac_y + dy * 2
+
+            # Buscar a Blinky
+            blinky = None
+
+            for fantasma in self.game.listas_sprites["fantasmas"]:
+                if fantasma.id_fantasma == 0:
+                    blinky = fantasma
+                    break
+
+            blinky_x = blinky.rect.x // self.game.CO.TX
+            blinky_y = blinky.rect.y // self.game.CO.TY
+
+            objetivo_x = 2 * punto_x - blinky_x
+            objetivo_y = 2 * punto_y - blinky_y
+
+            return objetivo_x, objetivo_y
 
         elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
             return (self.scatter_x, self.scatter_y)
@@ -245,7 +274,21 @@ class Fantasma(pygame.sprite.Sprite):
     def objetivo_clyde(self):
 
         if self.estado_fantasmas == EstadoFantasmas.CHASE:
-            return (self.game.pacman.rect.x // self.game.CO.TX, self.game.pacman.rect.y // self.game.CO.TY)
+            pac_x = self.game.pacman.rect.x // self.game.CO.TX
+            pac_y = self.game.pacman.rect.y // self.game.CO.TY
+
+            clyde_x = self.rect.x // self.game.CO.TX
+            clyde_y = self.rect.y // self.game.CO.TY
+
+            distancia2 = (pac_x - clyde_x) ** 2 + (pac_y - clyde_y) ** 2
+
+            # 8² = 64
+            if distancia2 > 64:
+                # Perseguir a Pac-Man
+                return pac_x, pac_y
+            else:
+                # Esquina inferior izquierda
+                return (self.scatter_x, self.scatter_y)
 
         elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
             return (self.scatter_x, self.scatter_y)
