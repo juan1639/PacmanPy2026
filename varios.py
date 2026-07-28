@@ -1,4 +1,5 @@
 import pygame
+from fantasmas import Fantasma, EstadoFantasmas
 
 # ====================================================================================
 #   varios.py (modulo de varias clases pequeñas que requieren poca logica)
@@ -6,6 +7,7 @@ import pygame
 #
 # ------------------------------------------------------------------------------------
 class LaberintoTile(pygame.sprite.Sprite):
+    """Funcion constructora"""
     def __init__(self, game, x, y, valor_tile):
         super().__init__()
         self.game = game
@@ -23,6 +25,7 @@ class LaberintoTile(pygame.sprite.Sprite):
 
 # ====================================================================================
 class LaberintoOrigTile(pygame.sprite.Sprite):
+    """Funcion constructora"""
     def __init__(self, game, x, y, valor_tile):
         super().__init__()
         self.game = game
@@ -59,6 +62,7 @@ class LaberintoOrigTile(pygame.sprite.Sprite):
 class Puntitos(pygame.sprite.Sprite):
     SUMA_PUNTOS = 10
 
+    """Funcion constructora"""
     def __init__(self, game, x, y, valor_tile):
         super().__init__()
         self.game = game
@@ -79,6 +83,7 @@ class Puntitos(pygame.sprite.Sprite):
 
 # ====================================================================================
 class PuntosGordos(pygame.sprite.Sprite):
+    """Funcion constructora"""
     def __init__(self, game, x, y, valor_tile):
         super().__init__()
         self.game = game
@@ -131,6 +136,7 @@ class PuntosGordos(pygame.sprite.Sprite):
 
 # =========================================================================================================
 class Textos(pygame.sprite.Sprite):
+    """Funcion constructora"""
     def __init__(self, game, texto, size, x, y, color, fondo=None, negrita=False, centrado=True, tipo=None):
         super().__init__()
         self.game = game
@@ -162,10 +168,16 @@ class Textos(pygame.sprite.Sprite):
             if self.tipo.startswith("show-bonus"):
                 self.rect.y -= 1
 
+        if Fantasma.estado_fantasmas == EstadoFantasmas.CHASE:
+            self.image = self.font.render('Chase', True, self.color, self.fondo)
+        elif Fantasma.estado_fantasmas == EstadoFantasmas.SCATTER:
+            self.image = self.font.render('Scatter', True, self.color, self.fondo)
+
 # ==================================================================================================
 class ItemFrutas(pygame.sprite.Sprite):
     X, Y = 9, 11
 
+    """Funcion constructora"""
     def __init__(self, game):
         super().__init__()
         self.game = game
@@ -187,4 +199,5 @@ class ItemFrutas(pygame.sprite.Sprite):
                 centrado=False, negrita=True, tipo="show-bonus-fruta")
             
             self.game.ultimo_update["show-bonus-fruta"] = pygame.time.get_ticks()
+
 

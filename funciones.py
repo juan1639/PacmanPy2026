@@ -1,7 +1,7 @@
 import pygame
 import sys
 from jugador import PacMan, PacmanShowVidas
-from fantasmas import Fantasma
+from fantasmas import Fantasma, EstadoFantasmas
 from varios import *
 from laberintos import Pantallas
 from tiles import TileType
@@ -173,7 +173,10 @@ def pantalla_gameover(self):
 def updates_segun_estado(self):
     """Updates condicionales (presentacion / preparado / en_juego...)"""
 
+    print(f"{self.index_estado_fantasmas}:{Fantasma.estado_fantasmas}")
+    
     check_temporizador_azules(self)
+    check_temporizador_estados_fantasmas(self)
     checkNivelSuperado(self)
     checkDelayNextLevel(self)
     self.instanciar_fruta_periodicamente()
@@ -186,6 +189,7 @@ def updates_segun_estado(self):
         calculo = pygame.time.get_ticks()
         if calculo - self.ultimo_update["preparado"] > self.CO.DURACION_PREPARADO:
             self.ultimo_update["preparado"] = calculo
+            self.ultimo_update["estado_fantasmas"] = pygame.time.get_ticks()
             self.resetear_estados_juego()
             self.estado_juego["preparado"] = False
             self.estado_juego["en_juego"] = True
@@ -217,6 +221,23 @@ def check_temporizador_azules(self):
             self.instanciar_fantasma(x, y, fantasma.id_fantasma, fantasma.direccion, azul=False, ojos=False)
 
 # ===================================================================================
+def check_temporizador_estados_fantasmas(self):
+    """Gestionar el tiempo de duracion (scatter, chase, scatter...)"""
+
+    if self.index_estado_fantasmas >= len(self.CO.DURACION_ESTADO[self.nivel]):
+        return
+    
+    calculo = pygame.time.get_ticks()
+    if calculo - self.ultimo_update['estado_fantasmas'] > self.CO.DURACION_ESTADO[self.nivel][self.index_estado_fantasmas]:
+        self.index_estado_fantasmas += 1
+        self.ultimo_update["estado_fantasmas"] = calculo
+
+        if self.index_estado_fantasmas % 2 == 0:
+            Fantasma.estado_fantasmas = EstadoFantasmas.SCATTER
+        else:
+            Fantasma.estado_fantasmas = EstadoFantasmas.CHASE
+
+# ===================================================================================
 def checkNivelSuperado(self):
     """Checkear si hemos comido todos los puntitos"""
 
@@ -241,6 +262,8 @@ def checkDelayNextLevel(self):
     calculo = pygame.time.get_ticks()
     if calculo - self.ultimo_update["nivel_superado_delay"] > self.CO.DELAY_NEXT_LEVEL:
         self.nivel += 1
+        self.index_estado_fantasmas = 0
+        self.ultimo_update['estado_fantasmas'] = pygame.time.get_ticks()
         self.resetear_estados_juego()
         self.estado_juego["preparado"] = True
         self.ultimo_update["preparado"] = pygame.time.get_ticks()
@@ -283,6 +306,7 @@ def eventos_comenzar_quit_etc(self):
                 self.ultimo_update["preparado"] = pygame.time.get_ticks()
 
                 if self.vidas <= 0:
+                    self.index_estado_fantasmas = 0
                     self.vidas = 3
                     self.puntos = 0
                     self.nivel = 1

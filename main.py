@@ -13,6 +13,7 @@ from funciones import *
 #   ( contiene funcion bucle_principal() )
 # ------------------------------------------------------------------------------------
 class Game:
+    """Funcion constructora"""
     def __init__(self):
         pygame.init()
 
@@ -29,9 +30,10 @@ class Game:
         self.sumaPtosComeFantasmas = 100	# 200 -> 400 -> 800 -> 1600
         self.temporizadorAzules = False
 
-        # Listas updates (tomas de tiempo/temporizadores)
+        # Temporizadores -> Listas updates (tomas de tiempo/temporizadores)
         self.ultimo_update = {
             "azules": pygame.time.get_ticks(),
+            "estado_fantasmas": pygame.time.get_ticks(),
             "preparado": pygame.time.get_ticks(),
             "item-fruta": pygame.time.get_ticks(),
             "show-bonus-fruta": pygame.time.get_ticks(),
@@ -41,6 +43,9 @@ class Game:
             "show-bonus-fantasma3": pygame.time.get_ticks(),
             "nivel_superado_delay": pygame.time.get_ticks()
         }
+
+        # scatter, chase, scatter, chase...
+        self.index_estado_fantasmas = 0
 
         # True= Se ejecuta el bucle Principal | False= no se ejecuta
         self.program_running = True

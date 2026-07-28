@@ -2,6 +2,7 @@ import pygame
 from enum import Enum
 from laberintos import Pantallas
 from tiles import TileType, paredes
+import random
 
 # ====================================================================================
 #   fantasmas.py (modulo logica de los fantasmas/enemigos)
@@ -21,7 +22,10 @@ class EstadoFantasmas(Enum):
     OJOS = "ojos"
 
 class Fantasma(pygame.sprite.Sprite):
-    def __init__(self, game, x, y, id_fantasma, dir_defecto, azul=False, ojos=False, scatterX=1, scatterY=1):
+    estado_fantasmas = EstadoFantasmas.SCATTER
+
+    """Funcion constructora"""
+    def __init__(self, game, x, y, id_fantasma, dir_defecto, azul=False, ojos=False, scatterX=random.randint(2, 12), scatterY=8):
         super().__init__()
         self.game = game
         self.id_fantasma = id_fantasma
@@ -31,7 +35,7 @@ class Fantasma(pygame.sprite.Sprite):
         self.velocidad = 2
         self.scatter_x = scatterX
         self.scatter_y = scatterY
-        self.estado_fantasmas = EstadoFantasmas.CHASE
+        self.set_estado_fantasmas_default_al_instanciar()
 
         # dict_movimientos:
         self.DICT_MOVIMIENTOS = {
@@ -54,7 +58,7 @@ class Fantasma(pygame.sprite.Sprite):
         # Diccionario de direcciones
         self.dic_direccion = self.generar_direcciones()
 
-        # Puntos clave
+        # Puntos clave *** NO UTILIZADA, debido a la IA fantasmas ***
         self.ptos_clave = self.procesar_puntos_clave([
             (75, 425), (225, 225), (225, 425), (225, 675), (225, 575),
             (325, 575), (225, 75), (425, 425), (325, 225),
@@ -87,6 +91,20 @@ class Fantasma(pygame.sprite.Sprite):
         self.actualizar_animacion()
         self.mover_fantasmas()
         self.verificar_colision_pacman()
+    
+    # ----------------------------------------------------------
+    def set_estado_fantasmas_default_al_instanciar(self):
+        if self.ojos:
+            Fantasma.estado_fantasmas = EstadoFantasmas.SCATTER
+        elif self.azul:
+            Fantasma.estado_fantasmas = EstadoFantasmas.SCATTER
+        else:
+            self.game.ultimo_update["estado_fantasmas"] = pygame.time.get_ticks()
+
+            if self.game.index_estado_fantasmas % 2 == 0:
+                Fantasma.estado_fantasmas = EstadoFantasmas.SCATTER
+            else:
+                Fantasma.estado_fantasmas = EstadoFantasmas.CHASE
     
     # ----------------------------------------------------------
     def generar_direcciones(self):
@@ -211,17 +229,17 @@ class Fantasma(pygame.sprite.Sprite):
     def objetivo_blinky(self):
         """- Blinky - persigue DIRECTAMENTE a Pacman"""
 
-        if self.estado_fantasmas == EstadoFantasmas.CHASE:
+        if Fantasma.estado_fantasmas == EstadoFantasmas.CHASE:
             return (self.game.pacman.rect.x // self.game.CO.TX, self.game.pacman.rect.y // self.game.CO.TY)
         
-        elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
+        elif Fantasma.estado_fantasmas == EstadoFantasmas.SCATTER:
             return (self.scatter_x, self.scatter_y)
 
     # ----------------------------------------------------------
     def objetivo_pinky(self):
         """- Pinky - tiene como objetivo 4 casillas de antelacion a Pacman"""
 
-        if self.estado_fantasmas == EstadoFantasmas.CHASE:
+        if Fantasma.estado_fantasmas == EstadoFantasmas.CHASE:
             pac_x = self.game.pacman.rect.x // self.game.CO.TX
             pac_y = self.game.pacman.rect.y // self.game.CO.TY
 
@@ -234,14 +252,14 @@ class Fantasma(pygame.sprite.Sprite):
 
             return objetivo_x, objetivo_y
 
-        elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
+        elif Fantasma.estado_fantasmas == EstadoFantasmas.SCATTER:
             return (self.scatter_x, self.scatter_y)
 
     # ----------------------------------------------------------
     def objetivo_inky(self):
         """ - Inky - tiene como objetivo un VECTOR entre Pacman y Blinky"""
 
-        if self.estado_fantasmas == EstadoFantasmas.CHASE:
+        if Fantasma.estado_fantasmas == EstadoFantasmas.CHASE:
             pac_x = self.game.pacman.rect.x // self.game.CO.TX
             pac_y = self.game.pacman.rect.y // self.game.CO.TY
 
@@ -267,13 +285,14 @@ class Fantasma(pygame.sprite.Sprite):
 
             return objetivo_x, objetivo_y
 
-        elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
+        elif Fantasma.estado_fantasmas == EstadoFantasmas.SCATTER:
             return (self.scatter_x, self.scatter_y)
 
     # ----------------------------------------------------------
     def objetivo_clyde(self):
+        """ - Clyde - tiene como objetivo Pacman, pero si se acerca, se - asusta -"""
 
-        if self.estado_fantasmas == EstadoFantasmas.CHASE:
+        if Fantasma.estado_fantasmas == EstadoFantasmas.CHASE:
             pac_x = self.game.pacman.rect.x // self.game.CO.TX
             pac_y = self.game.pacman.rect.y // self.game.CO.TY
 
@@ -290,7 +309,7 @@ class Fantasma(pygame.sprite.Sprite):
                 # Esquina inferior izquierda
                 return (self.scatter_x, self.scatter_y)
 
-        elif self.estado_fantasmas == EstadoFantasmas.SCATTER:
+        elif Fantasma.estado_fantasmas == EstadoFantasmas.SCATTER:
             return (self.scatter_x, self.scatter_y)
     
     # ----------------------------------------------------------
@@ -347,4 +366,5 @@ class Fantasma(pygame.sprite.Sprite):
         """Manejar cuando el fantasma atrapa a PacMan."""
         self.game.sonidos.reproducir("pacman_dies")
         self.game.instanciar_pacman_dies(impacto.rect.x, impacto.rect.y)
+
 

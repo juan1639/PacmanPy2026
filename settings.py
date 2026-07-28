@@ -2,7 +2,6 @@ import pygame
 import configparser
 import os
 
-
 # ====================================================================================
 #	settings.py (modulo de configuraciones)
 # 
@@ -67,6 +66,15 @@ class Constantes:
     N_FANTASMAS = 4
     # Duracion de los 'fantasmas-azules' en el nivel 1
     DURACION_AZULES = [8000, 8000, 7000, 6000, 5500, 5000, 4700, 4500, 4250, 4000, 3750, 3500, 3000, 2750, 2500]
+    # Duracion de los estados-fantasmas (scatter-chase) en los niveles: (1, 1, 2, 3, 4, (5 en adelante))
+    DURACION_ESTADO = [
+        (7000, 20000, 7000, 20000, 5000, 20000, 5000),
+        (7000, 20000, 7000, 20000, 5000, 20000, 5000),
+        (7000, 20000, 7000, 20000, 5000, 1033000, 1000),
+        (7000, 20000, 7000, 20000, 5000, 1033000, 1000),
+        (7000, 20000, 7000, 20000, 5000, 1033000, 1000),
+        (5000, 20000, 5000, 20000, 5000, 1033000, 1000)
+    ]
     DURACION_PREPARADO = 4200
     INTERVALO_FRUTA = 12000
     DURACION_SHOW_BONUS_FRUTA = 2400
@@ -87,6 +95,7 @@ class Constantes:
 
 # ====================================================================================
 class Sonidos:
+    """Funcion constructora"""
     def __init__(self):
         pygame.mixer.init()
         self.sonidos = self.cargar_sonidos()
@@ -124,4 +133,5 @@ class Sonidos:
                 self.sonidos[nombre].play()
             else:
                 self.sonidos[nombre].play(maxtime=duracion)
+
 

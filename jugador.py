@@ -15,6 +15,7 @@ class Direccion(Enum):
     DOWN = "do"
 
 class PacMan(pygame.sprite.Sprite):
+    """Funcion constructora"""
     def __init__(self, game, x, y, dir_por_defecto=Direccion.RIGHT.value):
         super().__init__()
         self.game = game
