@@ -104,17 +104,7 @@ class Game:
     # ===============================================================================
     def renderizar_boton_info(self):
         """Dibujar un boton (x, y, ancho, alto)"""
-        self.boton_settings = pygame.Rect(self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200 + 4, 200, 90)
-        self.boton_settings.center = (self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200 + 4)
-
-        mouse = pygame.mouse.get_pos()
-
-        if self.boton_settings.collidepoint(mouse):
-            color = self.COL.AZUL_C
-        else:
-            color = self.COL.VERDE_FONDO
-
-        pygame.draw.rect(self.pantalla, color, self.boton_settings, border_radius=8)
+        renderizar_boton_info_hover(self)
     
     # ===============================================================================
     def crear_pantalla_nivel(self):
