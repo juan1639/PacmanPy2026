@@ -30,27 +30,27 @@ def crear_escenario(self):
             elif valor_tile == TileType.WALL_RECT.value:
                 tileOrig = LaberintoOrigTile(self, ii, i, valor_tile)
                 self.listas_sprites["all_sprites"].add(tileOrig)
-                self.listas_sprites["puntitos"].add(tileOrig)
+                self.listas_sprites["laberinto"].add(tileOrig)
 
             elif valor_tile == TileType.WALL_DOWN.value:
                 tileOrig = LaberintoOrigTile(self, ii, i, valor_tile)
                 self.listas_sprites["all_sprites"].add(tileOrig)
-                self.listas_sprites["puntitos"].add(tileOrig)
+                self.listas_sprites["laberinto"].add(tileOrig)
             
             elif valor_tile == TileType.WALL_UP.value:
                 tileOrig = LaberintoOrigTile(self, ii, i, valor_tile)
                 self.listas_sprites["all_sprites"].add(tileOrig)
-                self.listas_sprites["puntitos"].add(tileOrig)
+                self.listas_sprites["laberinto"].add(tileOrig)
             
             elif valor_tile == TileType.WALL_RIGHT.value:
                 tileOrig = LaberintoOrigTile(self, ii, i, valor_tile)
                 self.listas_sprites["all_sprites"].add(tileOrig)
-                self.listas_sprites["puntitos"].add(tileOrig)
+                self.listas_sprites["laberinto"].add(tileOrig)
             
             elif valor_tile == TileType.WALL_LEFT.value:
                 tileOrig = LaberintoOrigTile(self, ii, i, valor_tile)
                 self.listas_sprites["all_sprites"].add(tileOrig)
-                self.listas_sprites["puntitos"].add(tileOrig)
+                self.listas_sprites["laberinto"].add(tileOrig)
 
             elif valor_tile == TileType.DOT.value:
                 dot = Puntitos(self, ii, i, valor_tile)
@@ -174,6 +174,7 @@ def updates_segun_estado(self):
     """Updates condicionales (presentacion / preparado / en_juego...)"""
 
     #print(f"{self.index_estado_fantasmas}:{Fantasma.estado_fantasmas}")
+    print(len(self.listas_sprites["puntitos"]))
     
     check_temporizador_azules(self)
     check_temporizador_estados_fantasmas(self)
@@ -226,9 +227,12 @@ def check_temporizador_estados_fantasmas(self):
 
     if self.index_estado_fantasmas >= len(self.CO.DURACION_ESTADO[self.nivel]):
         return
+
+    # max nivel 5 ... a partir de ahi siempre 5:
+    nivel_conf = self.nivel if self.nivel <= 5 else 5
     
     calculo = pygame.time.get_ticks()
-    if calculo - self.ultimo_update['estado_fantasmas'] > self.CO.DURACION_ESTADO[self.nivel][self.index_estado_fantasmas]:
+    if calculo - self.ultimo_update['estado_fantasmas'] > self.CO.DURACION_ESTADO[nivel_conf][self.index_estado_fantasmas]:
         self.index_estado_fantasmas += 1
         self.ultimo_update["estado_fantasmas"] = calculo
 
@@ -245,6 +249,10 @@ def checkNivelSuperado(self):
         return
      
     if len(self.listas_sprites["puntitos"]) <= 0 and self.estado_juego["en_juego"]:
+        # Vida extra al llegar a los niveles: 2, 5 y 10:
+        if self.nivel == 1 or self.nivel == 4 or self.nivel == 9:
+            self.vidas += 1
+        
         self.sonidos.sonidos["fantasmas_azules"].stop()
         self.estado_juego["en_juego"] = False
         self.estado_juego["nivel_superado"] = True
