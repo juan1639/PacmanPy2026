@@ -168,10 +168,10 @@ class Textos(pygame.sprite.Sprite):
             if self.tipo.startswith("show-bonus"):
                 self.rect.y -= 1
 
-        if Fantasma.estado_fantasmas == EstadoFantasmas.CHASE:
+        """if Fantasma.estado_fantasmas == EstadoFantasmas.CHASE:
             self.image = self.font.render('Chase', True, self.color, self.fondo)
         elif Fantasma.estado_fantasmas == EstadoFantasmas.SCATTER:
-            self.image = self.font.render('Scatter', True, self.color, self.fondo)
+            self.image = self.font.render('Scatter', True, self.color, self.fondo)"""
 
 # ==================================================================================================
 class ItemFrutas(pygame.sprite.Sprite):

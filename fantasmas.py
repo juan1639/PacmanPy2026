@@ -175,6 +175,10 @@ class Fantasma(pygame.sprite.Sprite):
             if not self.direccion_valida(x, y, direccion):
                 continue
 
+            # Esta teletransportandose:
+            if self.rect.x // self.game.CO.TX >= self.game.CO.COLUMNAS - 1 or self.rect.x <= 0:
+                continue
+
             dx, dy = self.DICT_MOVIMIENTOS[direccion]
 
             nuevo_x = x + dx
@@ -200,12 +204,27 @@ class Fantasma(pygame.sprite.Sprite):
 
         dx, dy = self.DICT_MOVIMIENTOS[direccion]
 
+        if self.es_teletransporte(x, y, dx):
+            return True
+
         indice = self.game.obtener_indice(x + dx, y + dy)
 
         if indice is None:
             return True
 
         return Pantallas.get_laberinto(self.game.nivel)[indice] not in paredes
+
+    # ----------------------------------------------------------
+    def es_teletransporte(self, x, y, vel_x):
+        """11=Fila en la que puede haber teletransporte"""
+        if y == 11:
+            if x + vel_x > self.game.CO.COLUMNAS:
+                self.rect.x = -self.game.CO.TX
+                return True
+            elif x + vel_x < -1:
+                self.rect.x = self.game.CO.COLUMNAS * self.game.CO.TX
+                return True
+        return False
     
     # ----------------------------------------------------------
     def obtener_objetivo(self):

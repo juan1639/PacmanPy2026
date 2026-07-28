@@ -173,7 +173,7 @@ def pantalla_gameover(self):
 def updates_segun_estado(self):
     """Updates condicionales (presentacion / preparado / en_juego...)"""
 
-    print(f"{self.index_estado_fantasmas}:{Fantasma.estado_fantasmas}")
+    #print(f"{self.index_estado_fantasmas}:{Fantasma.estado_fantasmas}")
     
     check_temporizador_azules(self)
     check_temporizador_estados_fantasmas(self)
