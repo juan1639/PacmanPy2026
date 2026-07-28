@@ -20,7 +20,7 @@ class Game:
         # Colores y constantes
         self.COL = Colores()
         self.CO = Constantes()
-        self.CO.INVULNERABLE = True
+        #self.CO.INVULNERABLE = True
 
         # Marcadores: ptos, nivel, vidas...
         self.nivel = self.CO.NIVEL_INICIAL
