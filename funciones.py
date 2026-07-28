@@ -183,8 +183,10 @@ def updates_segun_estado(self):
     self.instanciar_fruta_periodicamente()
     check_showbonus_fant_kill(self)
 
-    if self.estado_juego["menu_presentacion"]:
+    if self.estado_juego["menu_presentacion"] and not self.pantalla_info:
         self.listas_sprites["textos"].update()
+    elif self.estado_juego["menu_presentacion"] and self.pantalla_info:
+        pass
     
     elif self.estado_juego["preparado"]:
         calculo = pygame.time.get_ticks()
@@ -283,8 +285,11 @@ def checkDelayNextLevel(self):
 def draw_listas_sprites(self):
     """Renderizar las listas-sprites"""
 
-    if self.estado_juego["menu_presentacion"]:
+    if self.estado_juego["menu_presentacion"] and not self.pantalla_info:
         self.renderizar_boton_info()
+    elif self.estado_juego["menu_presentacion"] and self.pantalla_info:
+        self.renderizar_boton_info()
+        renderizar_explain(self)
 
     self.listas_sprites["all_sprites"].draw(self.pantalla)
     self.listas_sprites["fantasmas"].draw(self.pantalla)
@@ -310,6 +315,20 @@ def eventos_comenzar_quit_etc(self):
             if self.estado_juego['menu_presentacion'] and event.button == 1: # Botón izquierdo
                 mouse_x, mouse_y = event.pos
                 print(mouse_x, mouse_y)
+
+            if self.boton_settings.collidepoint(event.pos):
+                print("info")
+                self.pantalla_info = True if not self.pantalla_info else False
+
+                if not self.pantalla_info:
+                    self.listas_sprites['textos'].empty()
+                    self.instanciar_texto(self.CO.TXT_TITULO, 135, self.CO.RESOLUCION[0] // 2, 200, self.COL.NARANJA, negrita=True)
+                    self.instanciar_texto(self.CO.TXT_BUTTON_INFO, 48, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200, self.COL.AMARILLENTO, negrita=True)
+                    self.instanciar_texto("Pulse ENTER para comenzar...", 32, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 80, self.COL.AMARILLENTO)
+
+                elif self.pantalla_info:
+                    self.listas_sprites["textos"].empty()
+                    self.instanciar_texto(" Volver ", 40, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200, self.COL.BLANCO, negrita=True)
         
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
@@ -336,6 +355,11 @@ def eventos_comenzar_quit_etc(self):
             if event.key == pygame.K_TAB:
                 for clave in self.estado_juego:
                     print(clave, self.estado_juego[clave])
+
+# ===================================================================================
+def renderizar_explain(self):
+    #self.explain_rect.center = (self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] // 2)
+    self.pantalla.blit(self.explain_img, (0, 0))
 
 # ===================================================================================
 def eliminar_elemento_de_lista(self, lista, elemento):

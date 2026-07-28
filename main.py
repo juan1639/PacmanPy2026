@@ -74,17 +74,24 @@ class Game:
             "fantasmas": pygame.sprite.Group()
         }
 
+        # Default pantalla_info=False:
+        self.pantalla_info = False
+
         # Instanciar textos en 'Menu-presentacion
         self.instanciar_texto(self.CO.TXT_TITULO, 135, self.CO.RESOLUCION[0] // 2, 200, self.COL.NARANJA, negrita=True)
         self.instanciar_texto(self.CO.TXT_BUTTON_INFO, 48, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200, self.COL.AMARILLENTO, negrita=True)
         self.instanciar_texto("Pulse ENTER para comenzar...", 32, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 80, self.COL.AMARILLENTO)
-        
+
         # Pantalla y reloj
         self.pantalla = pygame.display.set_mode(self.CO.RESOLUCION)
         self.reloj = pygame.time.Clock()
 
         # Renderizar boton info:
         self.renderizar_boton_info()
+
+        # Carga img explain:
+        self.explain_img = self.obtener_grafico("pac-explain-ghosts.png", 10.2)[0]
+        self.explain_rect = self.obtener_grafico("pac-explain-ghosts.png", 10.2)[1]
 
         # Cargar sonidos del modulo settings
         self.sonidos = Sonidos()
@@ -99,7 +106,15 @@ class Game:
         """Dibujar un boton (x, y, ancho, alto)"""
         self.boton_settings = pygame.Rect(self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200 + 4, 200, 90)
         self.boton_settings.center = (self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200 + 4)
-        pygame.draw.rect(self.pantalla, self.COL.VERDE_FONDO, self.boton_settings, border_radius=8)
+
+        mouse = pygame.mouse.get_pos()
+
+        if self.boton_settings.collidepoint(mouse):
+            color = self.COL.AZUL_C
+        else:
+            color = self.COL.VERDE_FONDO
+
+        pygame.draw.rect(self.pantalla, color, self.boton_settings, border_radius=8)
     
     # ===============================================================================
     def crear_pantalla_nivel(self):
