@@ -75,13 +75,16 @@ class Game:
         }
 
         # Instanciar textos en 'Menu-presentacion
-        self.instanciar_texto(self.CO.TXT_TITULO, 135, self.CO.RESOLUCION[0] // 2, 220, self.COL.NARANJA, negrita=True)
-        self.instanciar_texto("Pulse ENTER para comenzar...", 32, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 80, 
-            self.COL.AMARILLENTO)
-
+        self.instanciar_texto(self.CO.TXT_TITULO, 135, self.CO.RESOLUCION[0] // 2, 200, self.COL.NARANJA, negrita=True)
+        self.instanciar_texto(self.CO.TXT_BUTTON_INFO, 48, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200, self.COL.AMARILLENTO, negrita=True)
+        self.instanciar_texto("Pulse ENTER para comenzar...", 32, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 80, self.COL.AMARILLENTO)
+        
         # Pantalla y reloj
         self.pantalla = pygame.display.set_mode(self.CO.RESOLUCION)
         self.reloj = pygame.time.Clock()
+
+        # Renderizar boton info:
+        self.renderizar_boton_info()
 
         # Cargar sonidos del modulo settings
         self.sonidos = Sonidos()
@@ -90,6 +93,13 @@ class Game:
     def obtener_indice(self, x, y):
         """Obtener índice en el laberinto 1D basado en coordenadas 2D."""
         return y * self.CO.COLUMNAS + x if 0 <= x < self.CO.COLUMNAS and 0 <= y < self.CO.FILAS else None
+    
+    # ===============================================================================
+    def renderizar_boton_info(self):
+        """Dibujar un boton (x, y, ancho, alto)"""
+        self.boton_settings = pygame.Rect(self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200 + 4, 200, 90)
+        self.boton_settings.center = (self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200 + 4)
+        pygame.draw.rect(self.pantalla, self.COL.VERDE_FONDO, self.boton_settings, border_radius=8)
     
     # ===============================================================================
     def crear_pantalla_nivel(self):

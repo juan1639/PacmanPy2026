@@ -82,6 +82,7 @@ class Constantes:
     DELAY_NEXT_LEVEL = 7200
     TXT_TITULO = " Pac Clon "
     TXT_PREPARADO = " Preparado! "
+    TXT_BUTTON_INFO = ' Info '
     ZONA_SCORES = CONFIG.getint('video', 'zona_scores')
     RESOLUCION = (TX * COLUMNAS + ZONA_SCORES, TY * FILAS)
     FPS = CONFIG.getint('video', 'fps')

@@ -174,7 +174,7 @@ def updates_segun_estado(self):
     """Updates condicionales (presentacion / preparado / en_juego...)"""
 
     #print(f"{self.index_estado_fantasmas}:{Fantasma.estado_fantasmas}")
-    print(len(self.listas_sprites["puntitos"]))
+    #print(len(self.listas_sprites["puntitos"]))
     
     check_temporizador_azules(self)
     check_temporizador_estados_fantasmas(self)
@@ -283,6 +283,9 @@ def checkDelayNextLevel(self):
 def draw_listas_sprites(self):
     """Renderizar las listas-sprites"""
 
+    if self.estado_juego["menu_presentacion"]:
+        self.renderizar_boton_info()
+
     self.listas_sprites["all_sprites"].draw(self.pantalla)
     self.listas_sprites["fantasmas"].draw(self.pantalla)
     self.listas_sprites["vidas"].draw(self.pantalla)
@@ -302,6 +305,12 @@ def eventos_comenzar_quit_etc(self):
             self.program_running = False
             pygame.quit()
             sys.exit()
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if self.estado_juego['menu_presentacion'] and event.button == 1: # Botón izquierdo
+                mouse_x, mouse_y = event.pos
+                print(mouse_x, mouse_y)
+        
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.program_running = False
