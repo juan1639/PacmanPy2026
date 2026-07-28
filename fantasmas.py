@@ -236,11 +236,11 @@ class Fantasma(pygame.sprite.Sprite):
         """El objetivo es diferente dependiendo del fantasma (cada fantasma IA diferente)"""
 
         if self.id_fantasma == 0:
-            return self.objetivo_blinky()
-        elif self.id_fantasma == 1:
-            return self.objetivo_pinky()
-        elif self.id_fantasma == 2:
             return self.objetivo_inky()
+        elif self.id_fantasma == 1:
+            return self.objetivo_blinky()
+        elif self.id_fantasma == 2:
+            return self.objetivo_pinky()
         else:
             return self.objetivo_clyde()
 

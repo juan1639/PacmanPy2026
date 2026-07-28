@@ -225,11 +225,11 @@ def check_temporizador_azules(self):
 def check_temporizador_estados_fantasmas(self):
     """Gestionar el tiempo de duracion (scatter, chase, scatter...)"""
 
-    if self.index_estado_fantasmas >= len(self.CO.DURACION_ESTADO[self.nivel]):
-        return
-
     # max nivel 5 ... a partir de ahi siempre 5:
     nivel_conf = self.nivel if self.nivel <= 5 else 5
+
+    if self.index_estado_fantasmas >= len(self.CO.DURACION_ESTADO[nivel_conf]):
+        return
     
     calculo = pygame.time.get_ticks()
     if calculo - self.ultimo_update['estado_fantasmas'] > self.CO.DURACION_ESTADO[nivel_conf][self.index_estado_fantasmas]:

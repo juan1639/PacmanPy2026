@@ -14,7 +14,7 @@ class LaberintoTile(pygame.sprite.Sprite):
         self.TX = self.game.CO.TX
         self.TY = self.game.CO.TY
 
-        nivel = min(self.game.nivel, 9)  # Limitar nivel máximo a 3
+        nivel = 1   # bloquepac1
         self.image = self.game.obtener_grafico(f'bloquepac{nivel}.png', 1)[0]
         self.rect = self.game.obtener_grafico(f'bloquepac{nivel}.png', 1)[1]
         self.rect.x, self.rect.y = x * self.TX, y * self.TY
@@ -183,7 +183,7 @@ class ItemFrutas(pygame.sprite.Sprite):
         self.game = game
 
         # Limitar el número máximo de niveles para la fruta
-        item_nivel = min(self.game.nivel, 4)
+        item_nivel = min(self.game.nivel, 5)
         self.image, self.rect = self.game.obtener_grafico(f'item{item_nivel}.png', 1)
         self.rect.x, self.rect.y = ItemFrutas.X * self.game.CO.TX, ItemFrutas.Y * self.game.CO.TY
 

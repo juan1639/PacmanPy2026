@@ -60,7 +60,7 @@ class Constantes:
     TX, TY = CONFIG.getint('video', 'size_tile_x'), CONFIG.getint('video', 'size_tile_y') # Tamano de los Tiles
     FILAS, COLUMNAS = 15, 19 # Filas x Columnas
     PACMAN_INI_POS = (CONFIG.getint('general', 'pacman_ini_pos_x'), CONFIG.getint('general', 'pacman_ini_pos_y'))
-    VIDAS_COOR_X = COLUMNAS # CoorX showvidas
+    VIDAS_COOR_X = COLUMNAS + 1 # CoorX showvidas
     VIDAS_COOR_Y = 7 # CoorY Inicial showvidas
     INVULNERABLE = CONFIG.getboolean('general', 'invulnerable')
     N_FANTASMAS = 4
