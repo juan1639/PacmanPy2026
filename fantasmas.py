@@ -204,8 +204,8 @@ class Fantasma(pygame.sprite.Sprite):
 
         dx, dy = self.DICT_MOVIMIENTOS[direccion]
 
-        if self.es_teletransporte(x, y, dx):
-            return True
+        """if self.es_teletransporte(x, y, dx):
+            return True"""
 
         indice = self.game.obtener_indice(x + dx, y + dy)
 
