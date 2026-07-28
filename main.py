@@ -64,6 +64,7 @@ class Game:
         self.listas_sprites = {
             "all_sprites": pygame.sprite.Group(),
             "pacman": pygame.sprite.Group(),
+            "pacman_intro": pygame.sprite.Group(),
             "vidas": pygame.sprite.Group(),
             "laberinto": pygame.sprite.Group(),
             "puntitos": pygame.sprite.Group(),
@@ -92,6 +93,10 @@ class Game:
         # Carga img explain:
         self.explain_img = self.obtener_grafico("pac-explain-ghosts.png", 10.2)[0]
         self.explain_rect = self.obtener_grafico("pac-explain-ghosts.png", 10.2)[1]
+
+        # Intanciar un Pacman para la pantalla-intro:
+        self.pacman_intro = PacManIntro(self, -2, self.CO.PACMAN_INI_POS[1] + 2)
+        self.listas_sprites["pacman_intro"].add(self.pacman_intro)
 
         # Cargar sonidos del modulo settings
         self.sonidos = Sonidos()

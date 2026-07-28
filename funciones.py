@@ -185,6 +185,7 @@ def updates_segun_estado(self):
 
     if self.estado_juego["menu_presentacion"] and not self.pantalla_info:
         self.listas_sprites["textos"].update()
+        self.listas_sprites['pacman_intro'].update()
     elif self.estado_juego["menu_presentacion"] and self.pantalla_info:
         pass
     
@@ -287,6 +288,7 @@ def draw_listas_sprites(self):
 
     if self.estado_juego["menu_presentacion"] and not self.pantalla_info:
         self.renderizar_boton_info()
+        self.listas_sprites['pacman_intro'].draw(self.pantalla)
     elif self.estado_juego["menu_presentacion"] and self.pantalla_info:
         self.renderizar_boton_info()
         renderizar_explain(self)

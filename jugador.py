@@ -130,6 +130,7 @@ class PacMan(pygame.sprite.Sprite):
     
     # --------------------------------------------------------------
     def actualizar_animacion(self):
+        """Gestionar que animacion toca renderizar"""
         if pygame.time.get_ticks() - self.ultimo_update > self.fotograma_vel:
             self.ultimo_update = pygame.time.get_ticks()
             self.indice_animacion = 1 - self.indice_animacion  # Alterna entre 0 y 1
@@ -203,4 +204,71 @@ class PacmanShowVidas(pygame.sprite.Sprite):
     
     def update(self):
         pass
+
+# ======================================================================================
+class PacManIntro(pygame.sprite.Sprite):
+    """Funcion constructora"""
+    def __init__(self, game, x, y, dir_por_defecto=Direccion.RIGHT.value):
+        super().__init__()
+        self.game = game
+        self.TX = self.game.CO.TX
+        self.TY = self.game.CO.TY
+        self.direccion_actual = dir_por_defecto
+        self.direccion_confirmada = self.direccion_actual
+
+        # 'teclaPulsada': [velX, velY, índice_animación]
+        self.movimientos = {
+            Direccion.RIGHT.value: [1, 0, 0],
+            Direccion.LEFT.value: [-1, 0, 2],
+            Direccion.UP.value: [0, -1, 4],
+            Direccion.DOWN.value: [0, 1, 6],
+        }
+
+        # Animación
+        self.lista_imagenes = [
+            self.game.obtener_grafico(f"pacman{i + 1}.png", 2)[0] for i in range(8)
+        ]
+        self.indice_animacion = 0
+        self.image = self.lista_imagenes[self.movimientos[self.direccion_actual][2]]
+
+        # Rectángulo y posición
+        self.rect = self.image.get_rect()
+        self.rect.x = x * self.TX
+        self.rect.y = y * self.TY
+
+        # Configuración adicional
+        self.velocidad = 4
+        self.avanzar = True
+        self.ultimo_update = pygame.time.get_ticks()
+        self.fotograma_vel = 90 # Velocidad de la animación
+
+    # --------------------------------------------------------------
+    def update(self):
+        if not self.game.estado_juego["menu_presentacion"]:
+            return
+        
+        self.actualizar_animacion()
+        self.cambio_direccion()
+        self.rect.x += self.movimientos[self.direccion_confirmada][0] * self.velocidad
+        
+    # --------------------------------------------------------------
+    def cambio_direccion(self):
+        """Gestionar vueltas infinitas en el pantalla-intro"""
+        if self.direccion_confirmada == Direccion.RIGHT.value and self.rect.x >= self.game.CO.RESOLUCION[0] * 1.5:
+            self.direccion_confirmada = Direccion.LEFT.value
+            return
+
+        if self.direccion_confirmada == Direccion.LEFT.value and self.rect.x <= -self.game.CO.RESOLUCION[0] * 1.5:
+            self.direccion_confirmada = Direccion.RIGHT.value
+            return
+    
+    # --------------------------------------------------------------
+    def actualizar_animacion(self):
+        """Gestionar que animacion toca renderizar"""
+        if pygame.time.get_ticks() - self.ultimo_update > self.fotograma_vel:
+            self.ultimo_update = pygame.time.get_ticks()
+            self.indice_animacion = 1 - self.indice_animacion  # Alterna entre 0 y 1
+            indice_base = self.movimientos[self.direccion_confirmada][2]
+            self.image = self.lista_imagenes[indice_base + self.indice_animacion]
+
 
