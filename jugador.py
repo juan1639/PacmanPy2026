@@ -238,7 +238,6 @@ class PacManIntro(pygame.sprite.Sprite):
 
         # Configuración adicional
         self.velocidad = 4
-        self.avanzar = True
         self.ultimo_update = pygame.time.get_ticks()
         self.fotograma_vel = 90 # Velocidad de la animación
 

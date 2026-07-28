@@ -231,6 +231,9 @@ def check_temporizador_estados_fantasmas(self):
     # max nivel 5 ... a partir de ahi siempre 5:
     nivel_conf = self.nivel if self.nivel <= 5 else 5
 
+    if not self.estado_juego['en_juego']:
+        return
+
     if self.index_estado_fantasmas >= len(self.CO.DURACION_ESTADO[nivel_conf]):
         return
     

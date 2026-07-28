@@ -95,8 +95,12 @@ class Game:
         self.explain_rect = self.obtener_grafico("pac-explain-ghosts.png", 10.2)[1]
 
         # Intanciar un Pacman para la pantalla-intro:
-        self.pacman_intro = PacManIntro(self, -2, self.CO.PACMAN_INI_POS[1] + 2)
+        self.pacman_intro = PacManIntro(self, -6, self.CO.PACMAN_INI_POS[1] + 2)
         self.listas_sprites["pacman_intro"].add(self.pacman_intro)
+
+        # Intanciar un Pacman para la pantalla-intro:
+        self.fantasma_intro = FantasmaIntro(self, -2, self.CO.PACMAN_INI_POS[1] + 2)
+        self.listas_sprites["pacman_intro"].add(self.fantasma_intro)
 
         # Cargar sonidos del modulo settings
         self.sonidos = Sonidos()

@@ -386,4 +386,74 @@ class Fantasma(pygame.sprite.Sprite):
         self.game.sonidos.reproducir("pacman_dies")
         self.game.instanciar_pacman_dies(impacto.rect.x, impacto.rect.y)
 
+# =====================================================================================
+class FantasmaIntro(pygame.sprite.Sprite):
+    """Funcion constructora"""
+    def __init__(self, game, x, y, dir_defecto=1, azul=False):
+        super().__init__()
+        self.game = game
+        self.direccion = dir_defecto
+        self.azul = azul
+        self.velocidad = 4
+
+        # Animaciones
+        self.lista_imagenes = self.cargar_imagenes()
+        self.indice_animacion = 0
+        self.image = self.lista_imagenes[0]
+        self.rect = self.image.get_rect()
+        self.rect.x = x * self.game.CO.TX
+        self.rect.y = y * self.game.CO.TY
+
+        # Estados
+        self.ultimo_update = pygame.time.get_ticks()
+        self.fotograma_vel = 100  # Velocidad de animación
+
+    # ----------------------------------------------------------
+    def update(self):
+        if not self.game.estado_juego["menu_presentacion"]:
+            return
+        
+        self.actualizar_animacion()
+        self.cambio_direccion()
+        self.rect.x += self.direccion * self.velocidad
+    
+    # --------------------------------------------------------------
+    def cambio_direccion(self):
+        """Gestionar vueltas infinitas en el pantalla-intro"""
+        if self.direccion == 1 and self.rect.x >= self.game.CO.RESOLUCION[0] * 1.5:
+            self.direccion = -1
+            return
+
+        if self.direccion == -1 and self.rect.x <= -self.game.CO.RESOLUCION[0] * 1.5:
+            self.direccion = 1
+            return
+
+    # ----------------------------------------------------------
+    def cargar_imagenes(self):
+        """Cargar imágenes según el estado del fantasma."""
+        return [
+            self.game.obtener_grafico("fantasma1.png", 2)[0],
+            self.game.obtener_grafico("fantasma2.png", 2)[0],
+            self.game.obtener_grafico("fantasma11.png", 2)[0],
+            self.game.obtener_grafico("fantasma12.png", 2)[0]
+            ]
+
+    # ----------------------------------------------------------
+    def actualizar_animacion(self):
+        """Actualizar el fotograma actual del fantasma."""
+        suma = 0
+
+        if pygame.time.get_ticks() - self.ultimo_update > self.fotograma_vel:
+            self.ultimo_update = pygame.time.get_ticks()
+
+            if self.direccion == 1:
+                suma = 2
+            
+            self.image = self.lista_imagenes[self.indice_animacion + suma]
+
+            self.indice_animacion += 1
+
+            if self.indice_animacion >= 2:
+                self.indice_animacion = 0
+
 
