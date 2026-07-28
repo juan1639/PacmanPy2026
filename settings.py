@@ -40,6 +40,7 @@ class Colores:
     NARANJA = (250, 142, 12)
     NARANJA_ROJIZO = (255, 100, 12)
     NARANJA_ROJIZO_2 = (255, 45, 12)
+    NARANJA_EXTRA = (254, 79, 18)
     BLANCO = (240, 240, 240)
     GRIS_FONDO = (59, 59, 59)
     BG_GRIS_OSCURO = (49, 49, 50)

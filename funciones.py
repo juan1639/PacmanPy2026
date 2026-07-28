@@ -249,8 +249,10 @@ def checkNivelSuperado(self):
         return
      
     if len(self.listas_sprites["puntitos"]) <= 0 and self.estado_juego["en_juego"]:
-        # Vida extra al llegar a los niveles: 2, 5 y 10:
+        # *** Vida extra al llegar a los niveles: 2, 5 y 10 ***
         if self.nivel == 1 or self.nivel == 4 or self.nivel == 9:
+            self.instanciar_texto(" Vida", 64, self.CO.RESOLUCION[0] - self.CO.ZONA_SCORES, self.CO.RESOLUCION[1] - 190, self.COL.NARANJA_EXTRA, negrita=True, centrado=False)
+            self.instanciar_texto("Extra!", 64, self.CO.RESOLUCION[0] - self.CO.ZONA_SCORES, self.CO.RESOLUCION[1] - 124, self.COL.NARANJA_EXTRA, negrita=True, centrado=False)
             self.vidas += 1
         
         self.sonidos.sonidos["fantasmas_azules"].stop()
