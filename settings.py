@@ -1,6 +1,7 @@
 import pygame
 import configparser
 import os
+from utils import resource_path
 
 # ====================================================================================
 #	settings.py (modulo de configuraciones)
@@ -109,15 +110,15 @@ class Sonidos:
     def cargar_sonidos(self):
         """Cargar todos los sonidos en un diccionario."""
         return {
-            "wakawaka": self.cargar_sonido("sonido/pacmanwakawaka.ogg", 0.9),
-            "sirena": self.cargar_sonido("sonido/pacmansirena.ogg", 0.2),
-            "eating_cherry": self.cargar_sonido("sonido/pacmaneatingcherry.ogg"),
-            "pacman_dies": self.cargar_sonido("sonido/pacmandies.ogg"),
-            "gameover_retro": self.cargar_sonido("sonido/gameoveretro.ogg"),
-            "fantasmas_azules": self.cargar_sonido("sonido/pacmanazules.ogg"),
-            "eating_ghost": self.cargar_sonido("sonido/pacmaneatinghost.ogg"),
-            "inicio_nivel": self.cargar_sonido("sonido/pacmaninicionivel.ogg"),
-            "intermision": self.cargar_sonido("sonido/pacmanintermision.ogg")
+            "wakawaka": self.cargar_sonido(resource_path("sonido/pacmanwakawaka.ogg"), 0.9),
+            "sirena": self.cargar_sonido(resource_path("sonido/pacmansirena.ogg"), 0.2),
+            "eating_cherry": self.cargar_sonido(resource_path("sonido/pacmaneatingcherry.ogg")),
+            "pacman_dies": self.cargar_sonido(resource_path("sonido/pacmandies.ogg")),
+            "gameover_retro": self.cargar_sonido(resource_path("sonido/gameoveretro.ogg")),
+            "fantasmas_azules": self.cargar_sonido(resource_path("sonido/pacmanazules.ogg")),
+            "eating_ghost": self.cargar_sonido(resource_path("sonido/pacmaneatinghost.ogg")),
+            "inicio_nivel": self.cargar_sonido(resource_path("sonido/pacmaninicionivel.ogg")),
+            "intermision": self.cargar_sonido(resource_path("sonido/pacmanintermision.ogg"))
         }
     
     # -------------------------------------------------------------------------

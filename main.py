@@ -12,6 +12,7 @@ from laberintos import Pantallas
 from settings import *
 from tiles import TileType
 from funciones import *
+from utils import resource_path
 
 # ====================================================================================
 #   main.py (modulo principal) ... clase principal --> class Game

@@ -5,6 +5,7 @@ from fantasmas import Fantasma, EstadoFantasmas
 from varios import *
 from laberintos import Pantallas
 from tiles import TileType
+from utils import resource_path
 
 # ========================================================================
 #   Modulo de funciones (que no pertenecen a ninguna class)
@@ -65,7 +66,7 @@ def crear_escenario(self):
 def obtener_grafico_img_rect(self, nombrePng, escala):
     """Devolver una imagen y un rectangulo."""
 
-    img = pygame.image.load('pacGraf/' + nombrePng).convert()
+    img = pygame.image.load(resource_path('pacGraf/' + nombrePng)).convert()
     escalaX = self.CO.TX * escala
     escalaY = self.CO.TY * escala
     image = pygame.transform.scale(img, (escalaX, escalaY))
