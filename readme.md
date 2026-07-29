@@ -8,5 +8,5 @@
 - En cuanto al azul, el objetivo es un vector entre Pacman y el fantasma rojo.
 - El naranja es igual que el rojo, pero al igual que el juego original, al acercarse mucho se 'asusta'.
 
-<img src="pacGraf/pac-explain-ghost.png" alt="game img"/>
+<img src="pacGraf/pac-explain-ghosts.png" alt="game img"/>
 <img src="miniatura-pacClon2025-1.png" alt="game img"/>
