@@ -134,6 +134,8 @@ class Game:
     
     # ===============================================================================
     def resetear_estados_juego(self):
+        """Establecer todos los estados del juego a False
+           (normalmente para despues poner uno de ellos a True)"""
         self.estado_juego = {clave: False for clave in self.estado_juego}
     
     # ===============================================================================
@@ -164,11 +166,13 @@ class Game:
     
     # ===============================================================================
     def instanciar_fantasma(self, coorX, coorY, i, direc, azul, ojos):
+        """Instanciar uno de los 4 fantasmas"""
         fantasma = Fantasma(self, coorX, coorY, i, direc, azul, ojos)
         self.listas_sprites["fantasmas"].add(fantasma)
     
     # ===============================================================================
     def instanciar_pacman_dies(self, x, y):
+        """Instanciar un Pacman dies (dando vueltas o con una animacion dies)"""
         pacman_dies = PacManDies(self, x, y)
         self.listas_sprites["all_sprites"].add(pacman_dies)
     
@@ -197,6 +201,7 @@ class Game:
     
     # ===============================================================================
     def update(self):
+        """Funcion del -bucle principal- encargada de actualizar todo"""
         pygame.display.set_caption(str(int(self.reloj.get_fps())))
 
         updates_segun_estado(self)
@@ -206,12 +211,13 @@ class Game:
     
     # ===============================================================================
     def draw(self):
+        """Funcion del -bucle principal- encargada de renderizar todo"""
         self.pantalla.fill(self.COL.GRIS_FONDO)
         draw_listas_sprites(self)
     
     # ===============================================================================
     def check_event(self):
-        """Eventos (Quit/Comenzar...)"""
+        """Funcion del -bucle principal- encargada de los Eventos (teclado, raton)..."""
         eventos_comenzar_quit_etc(self)
     
     # ===============================================================================
@@ -219,7 +225,7 @@ class Game:
     #  
     # -------------------------------------------------------------------------------
     def bucle_principal(self):
-        """BUCLE PRINCIPAL del Juego"""
+        """*** BUCLE PRINCIPAL del Juego ***"""
         while self.program_running:
             self.check_event()
             self.update()

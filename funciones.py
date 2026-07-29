@@ -14,7 +14,6 @@ from tiles import TileType
 # ------------------------------------------------------------------------
 def crear_escenario(self):
     """Crear el laberinto y los tiles correspondientes."""
-    
     contador = -1
     for i in range(self.CO.FILAS):
         for ii in range(self.CO.COLUMNAS):
@@ -77,18 +76,21 @@ def obtener_grafico_img_rect(self, nombrePng, escala):
 
 # ===================================================================================
 def instanciar_pacman(self):
+    """Instanciar a Pacman"""
     self.pacman = PacMan(self, self.CO.PACMAN_INI_POS[0], self.CO.PACMAN_INI_POS[1])
     self.listas_sprites["all_sprites"].add(self.pacman)
     self.listas_sprites["pacman"].add(self.pacman)
 
 # ===================================================================================
 def instanciar_showvidas(self):
+    """Instanciar el numero de vidas correspondiente"""
     for i in range(self.vidas):
         self.pacman_vidas = PacmanShowVidas(self, self.CO.VIDAS_COOR_X, self.CO.VIDAS_COOR_Y + i)
         self.listas_sprites["vidas"].add(self.pacman_vidas)
 
 # ===================================================================================
 def instanciar_fantasmas(self):
+    """Instanciar los 4 fantasmas en un bucle -for-"""
     for i in range(self.CO.N_FANTASMAS):
         datos = self.CO.LISTA_ARGS_FANTASMAS[i]
         coorX = datos[0]
@@ -97,6 +99,7 @@ def instanciar_fantasmas(self):
 
 # ===================================================================================
 def instanciar_fantasma(self, coorX, coorY, i, direc, azul, ojos, scatterX, scatterY):
+    """Instanciar cada fantasma"""
     fantasma = Fantasma(self, coorX, coorY, i, direc, azul, ojos, scatterX, scatterY)
     self.listas_sprites["fantasmas"].add(fantasma)
 
@@ -117,6 +120,7 @@ def instanciar_fruta(self):
 
 # ===================================================================================
 def check_showbonus_kill(self):
+    """Checkear el temporizador para que desaparezca el 100, etc... cuando comemos la fruta"""
     if len(self.listas_sprites["items"]) != 0 or not self.estado_juego["en_juego"]:
         return
     
@@ -127,6 +131,7 @@ def check_showbonus_kill(self):
 
 # ===================================================================================
 def check_showbonus_fant_kill(self):
+    """Checkear el temporizador para que desaparezca el 200, 400... cuando comemos a un fantasma"""
     if not self.estado_juego["en_juego"] or not self.temporizadorAzules:
         return
     
@@ -156,7 +161,6 @@ def instanciar_textos(self):
 # ===================================================================================
 def pantalla_gameover(self):
     """Pantalla de *** Game Over *** """
-
     print('game over')
     
     self.estado_juego["game_over"] = True
@@ -334,53 +338,8 @@ def eventos_comenzar_quit_etc(self):
 
                 elif self.pantalla_info:
                     self.listas_sprites["textos"].empty()
-                    MARGIN_LEFT = self.CO.RESOLUCION[0] // 2.15
-                    MARGIN_TOP = 12
-                    INTERLINEAS = 24
-                    pos_y = MARGIN_TOP
-
-                    self.instanciar_texto(" Volver ", 40, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200, self.COL.BLANCO, negrita=True)
-
-                    self.instanciar_texto("Al igual que en el juego original, cada fantasma", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("tiene un comportamiento propio como se puede", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("ver en el gráfico.", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("                                            ", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("El rojo tiene como objetivo la posición exacta", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("de Pacman, mientras que el verde apunta cuatro", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("posiciones por delante.", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("                                              ", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("El azul calcula un vector intermedio entre Pacman", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("y el fantasma rojo.", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("                                             ", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("Por último, el fantasma llamado tonto, en realidad", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("tiene el mismo comportamiento que el rojo, salvo", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("que parece asustarse cuando se acerca mucho", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("ya que está programado para alejarse en tal caso.", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
-
-                    pos_y += INTERLINEAS * 2
-                    self.instanciar_texto("Pueden cambiarse algunos settings del juego", 24, MARGIN_LEFT, pos_y, self.COL.AMARILLENTO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("editando el archivo config.ini", 24, MARGIN_LEFT, pos_y, self.COL.AMARILLENTO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("(Para restaurar los valores default bastará con", 24, MARGIN_LEFT, pos_y, self.COL.AMARILLENTO, negrita=False, centrado=False)
-                    pos_y += INTERLINEAS
-                    self.instanciar_texto("borrar dicho archivo. Se creará uno nuevo).", 24, MARGIN_LEFT, pos_y, self.COL.AMARILLENTO, negrita=False, centrado=False)
-                    self.instanciar_texto(" Programmed in python by Juan Eguía, 2026 ", 28, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 60, self.COL.NARANJA_ROJIZO, negrita=False, centrado=True)
-
+                    textos_info_crdts(self)
+        
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.program_running = False
@@ -400,7 +359,7 @@ def eventos_comenzar_quit_etc(self):
                     self.puntos = 0
                     self.nivel = 1
                 
-                # ************** Comenzar partida (Pulsando ENTER) ***********************
+                """ ************** Comenzar partida (Pulsando ENTER) **************** """
                 self.new_game()
 
             if event.key == pygame.K_TAB:
@@ -409,6 +368,7 @@ def eventos_comenzar_quit_etc(self):
 
 # ===================================================================================
 def renderizar_boton_info_hover(self):
+    """Renderizar el boton-info y agregarle un hover"""
     self.boton_settings = pygame.Rect(self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200 + 4, 200, 90)
     self.boton_settings.center = (self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200 + 4)
 
@@ -423,6 +383,7 @@ def renderizar_boton_info_hover(self):
     
 # ===================================================================================
 def renderizar_explain(self):
+    """Renderizar la imagen con las flechas explicativas"""
     #self.explain_rect.center = (self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] // 2)
     self.pantalla.blit(self.explain_img, (0, 0))
 
@@ -433,4 +394,55 @@ def eliminar_elemento_de_lista(self, lista, elemento):
         if isinstance(sprite, Textos) and sprite.tipo == elemento:
             self.listas_sprites["textos"].remove(sprite)
             break
+
+# ===================================================================================
+def textos_info_crdts(self):
+    """Renderizar los textos de la pantalla -info-"""
+    MARGIN_LEFT = self.CO.RESOLUCION[0] // 2.15
+    MARGIN_TOP = 12
+    INTERLINEAS = 24
+    pos_y = MARGIN_TOP
+
+    self.instanciar_texto(" Volver ", 40, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 200, self.COL.BLANCO, negrita=True)
+
+    self.instanciar_texto("Al igual que en el juego original, cada fantasma", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("tiene un comportamiento propio como se puede", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("ver en el gráfico.", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("                                            ", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("El rojo tiene como objetivo la posición exacta", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("de Pacman, mientras que el verde apunta cuatro", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("posiciones por delante.", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("                                              ", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("El azul calcula un vector intermedio entre Pacman", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("y el fantasma rojo.", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("                                             ", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("Por último, el fantasma llamado tonto, en realidad", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("tiene el mismo comportamiento que el rojo, salvo", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("que parece asustarse cuando se acerca mucho", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("ya que está programado para alejarse en tal caso.", 24, MARGIN_LEFT, pos_y, self.COL.BLANCO, negrita=False, centrado=False)
+
+    pos_y += INTERLINEAS * 2
+    self.instanciar_texto("Pueden cambiarse algunos settings del juego", 24, MARGIN_LEFT, pos_y, self.COL.AMARILLENTO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("editando el archivo config.ini", 24, MARGIN_LEFT, pos_y, self.COL.AMARILLENTO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("(Para restaurar los valores default bastará con", 24, MARGIN_LEFT, pos_y, self.COL.AMARILLENTO, negrita=False, centrado=False)
+    pos_y += INTERLINEAS
+    self.instanciar_texto("borrar dicho archivo. Se creará uno nuevo).", 24, MARGIN_LEFT, pos_y, self.COL.AMARILLENTO, negrita=False, centrado=False)
+    self.instanciar_texto(" Programmed in python by Juan Eguía, 2026 ", 28, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 60, self.COL.NARANJA_ROJIZO, negrita=False, centrado=True)
+
 

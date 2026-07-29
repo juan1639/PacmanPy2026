@@ -7,6 +7,7 @@ import os
 # 
 # ------------------------------------------------------------------------------------
 class ConfigIni:
+    """Crear un archivo config.ini (si no existe. Si ya existe, usara el ya creado)."""
     @staticmethod
     def crear_configini_si_no_existe():
         NOMBRE = 'config.ini'
@@ -35,6 +36,7 @@ class ConfigIni:
 
 # ====================================================================================
 class Colores:
+    """Algunos colores RGB para usar en textos, etc."""
     AMARILLO = (220, 190, 0)
     AMARILLENTO = (250, 245, 130)
     NARANJA = (250, 142, 12)
@@ -50,6 +52,7 @@ class Colores:
 
 # ====================================================================================
 class Constantes:
+    """Las constantes del juego. Algunas pueden modificarse editando el config.ini"""
     ConfigIni.crear_configini_si_no_existe()
 
     CONFIG = configparser.ConfigParser()

@@ -58,6 +58,7 @@ class PacMan(pygame.sprite.Sprite):
     
     # --------------------------------------------------------------
     def update(self):
+        """Funcion que actualizara esta instancia en el main"""
         if not self.game.estado_juego["en_juego"]:
             return
 
@@ -68,6 +69,7 @@ class PacMan(pygame.sprite.Sprite):
     
     # --------------------------------------------------------------
     def leer_teclado(self):
+        """Leer teclado (cursores/teclas para mover a Pacman)"""
         teclas = pygame.key.get_pressed()
         if teclas[pygame.K_LEFT]:
             self.direccion_actual = Direccion.LEFT.value
@@ -105,6 +107,7 @@ class PacMan(pygame.sprite.Sprite):
     
     # --------------------------------------------------------------
     def colision_laberinto(self, direccion, x, y):
+        """Checkear si hay colision con el laberinto"""
         vel_x, vel_y = self.movimientos[direccion][:2]
 
         if self.es_teletransporte(x, y, vel_x):
@@ -119,6 +122,7 @@ class PacMan(pygame.sprite.Sprite):
     
     # --------------------------------------------------------------
     def es_teletransporte(self, x, y, vel_x):
+        """Checkear si Pacman se ha metido en algun teletransporte"""
         if y == 11:  # Línea especial para teletransporte
             if x + vel_x > self.game.CO.COLUMNAS:
                 self.rect.x = -self.TX
@@ -139,12 +143,14 @@ class PacMan(pygame.sprite.Sprite):
     
     # --------------------------------------------------------------
     def reproducir_sirena(self):
+        """No usada"""
         if pygame.time.get_ticks() - self.ultimo_sonido > self.sonido_sirena_intervalo:
             self.ultimo_sonido = pygame.time.get_ticks()
             self.game.sonidos["sirena"].play(maxtime=500)
 
 # ======================================================================================
 class PacManDies(pygame.sprite.Sprite):
+    """Funcion constructora"""
     def __init__(self, game, x, y):
         super().__init__()
         self.game = game
@@ -168,11 +174,13 @@ class PacManDies(pygame.sprite.Sprite):
     
     # --------------------------------------------------------------
     def update(self):
+        """Funcion que actualizara esta instancia en el main"""
         self.actualizar_animacion()
         self.verificar_duracion()
     
     # --------------------------------------------------------------
     def actualizar_animacion(self):
+        """Gestionar las animaciones de Pacman"""
         if pygame.time.get_ticks() - self.ultimo_update > self.fotograma_vel:
             self.ultimo_update = pygame.time.get_ticks()
             self.indice_animacion = (self.indice_animacion + 1) % len(self.lista_imagenes)
@@ -180,6 +188,7 @@ class PacManDies(pygame.sprite.Sprite):
     
     # --------------------------------------------------------------
     def verificar_duracion(self):
+        """Checkear en ms el temporizador para el cambio de animacion"""
         if pygame.time.get_ticks() - self.ultimo_update_duracion > self.duracion:
             self.kill()
             self.game.listas_sprites["fantasmas"].empty()
@@ -192,6 +201,7 @@ class PacManDies(pygame.sprite.Sprite):
 class PacmanShowVidas(pygame.sprite.Sprite):
     MARGEN = 12
 
+    """Funcion constructora"""
     def __init__(self, game, x, y):
         super().__init__()
         self.game = game
@@ -243,6 +253,7 @@ class PacManIntro(pygame.sprite.Sprite):
 
     # --------------------------------------------------------------
     def update(self):
+        """Funcion que actualizara esta instancia en el main"""
         if not self.game.estado_juego["menu_presentacion"]:
             return
         

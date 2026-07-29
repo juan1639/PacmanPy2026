@@ -75,6 +75,7 @@ class Puntitos(pygame.sprite.Sprite):
         self.valor = valor_tile
 
     def update(self):
+        """Funcion que actualizara esta instancia en el main"""
         if pygame.sprite.spritecollide(self, self.game.listas_sprites["pacman"], False):
             self.kill()
             self.game.puntos += Puntitos.SUMA_PUNTOS
@@ -114,6 +115,7 @@ class PuntosGordos(pygame.sprite.Sprite):
     
     # -------------------------------------------------------------------
     def update(self):
+        """Funcion que actualizara esta instancia en el main"""
         # Animación de escala
         if pygame.time.get_ticks() - self.ultimo_update > self.vel_anima:
             self.ultimo_update = pygame.time.get_ticks()
@@ -159,6 +161,7 @@ class Textos(pygame.sprite.Sprite):
         #self.render_nivel = self.texto = str(self.game.nivel)
 
     def update(self):
+        """Funcion que actualizara esta instancia en el main"""
         if self.tipo == "dinamico-puntos":
             self.image = self.font.render(f'{self.game.puntos}', True, self.color, self.fondo)
         if self.tipo == "dinamico-nivel":
@@ -188,6 +191,7 @@ class ItemFrutas(pygame.sprite.Sprite):
         self.rect.x, self.rect.y = ItemFrutas.X * self.game.CO.TX, ItemFrutas.Y * self.game.CO.TY
 
     def update(self):
+        """Funcion que actualizara esta instancia en el main"""
         if pygame.sprite.spritecollide(self, self.game.listas_sprites["pacman"], False):
             self.kill()
             self.game.sonidos.reproducir("eating_cherry")

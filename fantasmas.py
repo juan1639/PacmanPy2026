@@ -85,6 +85,7 @@ class Fantasma(pygame.sprite.Sprite):
     
     # ----------------------------------------------------------
     def update(self):
+        """Funcion que actualizara esta instancia en el main"""
         if not self.game.estado_juego["en_juego"]:
             return
         
@@ -94,6 +95,7 @@ class Fantasma(pygame.sprite.Sprite):
     
     # ----------------------------------------------------------
     def set_estado_fantasmas_default_al_instanciar(self):
+        """Estado inicial de los fantasma al ser instanciados"""
         if self.ojos:
             Fantasma.estado_fantasmas = EstadoFantasmas.SCATTER
         elif self.azul:
@@ -410,6 +412,7 @@ class FantasmaIntro(pygame.sprite.Sprite):
 
     # ----------------------------------------------------------
     def update(self):
+        """Funcion que actualizara esta instancia en el main"""
         if not self.game.estado_juego["menu_presentacion"]:
             return
         

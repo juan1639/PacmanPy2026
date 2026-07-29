@@ -1,6 +1,7 @@
 from enum import Enum
 
 class TileType(Enum):
+    """Equivalencias numericas de los arrays, almacenadas en -constantes-"""
     WALL = 9
     DOT = 1
     POWER_DOT = 5
@@ -10,6 +11,7 @@ class TileType(Enum):
     WALL_RIGHT = 4
     WALL_LEFT = 3
 
+"""Todas las equivalencias que son paredes, almacenadas en una lista."""
 paredes = [
     TileType.WALL.value,
     TileType.WALL_RECT.value,
@@ -18,3 +20,4 @@ paredes = [
     TileType.WALL_RIGHT.value,
     TileType.WALL_LEFT.value
 ]
+
