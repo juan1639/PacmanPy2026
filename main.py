@@ -1,3 +1,9 @@
+# ====================================================================================
+#                     PAC-CLON py     by Juan Eguía, 2026
+# 
+#       recreacion del juego clasico arcade Pacman, programada en python
+#  
+# ------------------------------------------------------------------------------------
 import pygame
 from jugador import *
 from fantasmas import *

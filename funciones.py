@@ -379,6 +379,7 @@ def eventos_comenzar_quit_etc(self):
                     self.instanciar_texto("(Para restaurar los valores default bastará con", 24, MARGIN_LEFT, pos_y, self.COL.AMARILLENTO, negrita=False, centrado=False)
                     pos_y += INTERLINEAS
                     self.instanciar_texto("borrar dicho archivo. Se creará uno nuevo).", 24, MARGIN_LEFT, pos_y, self.COL.AMARILLENTO, negrita=False, centrado=False)
+                    self.instanciar_texto(" Programmed in python by Juan Eguía, 2026 ", 28, self.CO.RESOLUCION[0] // 2, self.CO.RESOLUCION[1] - 60, self.COL.NARANJA_ROJIZO, negrita=False, centrado=True)
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
