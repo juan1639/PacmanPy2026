@@ -11,7 +11,7 @@
 <img src="pacGraf/pac-explain-ghosts.png" alt="game img"/>
 <img src="miniatura-pacClon2025-1.png" alt="game img"/>
 <img src="pacman-diagrama-1.png" alt="game img"/>
-```text
+```
 Game
 ├── Estado del juego
 ├── Puntuación
@@ -23,8 +23,6 @@ Game
     ├── Actualización de entidades
     ├── Detección de colisiones
     └── Renderizado
-```
-```text
 Módulos del proyecto
 ├── jugador.py
 │   └── Lógica y comportamiento de Pac-Man
